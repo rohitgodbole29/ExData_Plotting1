@@ -1,6 +1,7 @@
 # load the data
 library(chron)
 library(ggplot2)
+library(dplyr)
 file1<-read.csv(file = "E:\\johns hopkins\\Exploring Data GitHub\\household_power_consumption.txt",
                 sep = ";",stringsAsFactors = FALSE)
 
@@ -22,7 +23,9 @@ rm(file1)
 # to make 4 plots
 # Plot #1 : Histogram
 png(filename ="E:\\johns hopkins\\Exploring Data GitHub\\plot1.png",width = 480,height = 480,units = "px")
-g<- ggplot(data = file2,mapping = aes(x = file2$Global_active_power))
-g+geom_histogram(bins = 45)
+#g<- ggplot(data = file2,mapping = aes(x = file2$Global_active_power))
+#g+geom_histogram(bins = 45)
+hist(x = file2$Global_active_power,col = 'red',xlab = 'Global Active Power (kilowatt)',main = "Global Active Power",xlim = c(0,6))
 dev.off()
 # end of plot1
+

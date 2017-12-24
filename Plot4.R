@@ -4,6 +4,7 @@ library(ggplot2)
 library(lubridate)
 library(data.table)
 library(cowplot)
+library(dplyr)
 file1<-read.csv(file = "E:\\johns hopkins\\Exploring Data GitHub\\household_power_consumption.txt",
                 sep = ";",stringsAsFactors = FALSE)
 
@@ -28,31 +29,47 @@ file2$date_time<-ymd_hms(paste(file2$Date,file2$Time))
 # let us show the facets in a grid.
 # plotting below...
 
-plotlbc<-ggplot(data = file2,mapping = aes(x = file2$date_time))+
-    geom_line(aes(y =file2$Sub_metering_1,color="Sub_metering_1"))+
-    geom_line(aes(y =file2$Sub_metering_2,color="Sub_metering_2"))+
-    geom_line(aes(y =file2$Sub_metering_3,color="Sub_metering_3"))+
-    scale_x_datetime(date_labels = "%a")+
-    scale_color_manual("",values = c("Sub_metering_1" ="red","Sub_metering_2"="blue","Sub_metering_3"="black"))+
-    ylab(label="Energy Sub-metering")+
-    xlab(label = "")
+#plotlbc<-ggplot(data = file2,mapping = aes(x = file2$date_time))+
+  #  geom_line(aes(y =file2$Sub_metering_1,color="Sub_metering_1"))+
+   # geom_line(aes(y =file2$Sub_metering_2,color="Sub_metering_2"))+
+    #geom_line(aes(y =file2$Sub_metering_3,color="Sub_metering_3"))+
+    #scale_x_datetime(date_labels = "%a")+
+    #scale_color_manual("",values = c("Sub_metering_1" ="red","Sub_metering_2"="blue","Sub_metering_3"="black"))+
+    #ylab(label="Energy Sub-metering")+
+    #xlab(label = "")
 # this above plot is the left bottom vcorner of the grid.
 
-plotltc<-ggplot(data = file2,mapping = aes(x = file2$date_time,y = file2$Global_active_power))+
-  geom_line()+scale_x_datetime(date_labels = "%a")+xlab(label = "")+ylab(label = "Global active power(kilowatts)")
+#plotltc<-ggplot(data = file2,mapping = aes(x = file2$date_time,y = file2$Global_active_power))+
+ # geom_line()+scale_x_datetime(date_labels = "%a")+xlab(label = "")+ylab(label = "Global active power(kilowatts)")
 # Above plot is the left top corner.
 
-plotrtc<-ggplot(data = file2,mapping = aes(x = file2$date_time,y = file2$Voltage))+
-  geom_line()+scale_x_datetime(date_labels = "%a")+xlab(label = "datetime")+ylab(label = "Voltage")
+#plotrtc<-ggplot(data = file2,mapping = aes(x = file2$date_time,y = file2$Voltage))+
+ # geom_line()+scale_x_datetime(date_labels = "%a")+xlab(label = "datetime")+ylab(label = "Voltage")
 # above plot is the top right corner
 
-plotrbc<- ggplot(data = file2,mapping = aes(x = file2$date_time,y = file2$Global_reactive_power))+
-  geom_line()+scale_x_datetime(date_labels = "%a")+xlab(label = "datetime")+ylab(label = "Global_reactive_power")
+#plotrbc<- ggplot(data = file2,mapping = aes(x = file2$date_time,y = file2$Global_reactive_power))+
+ # geom_line()+scale_x_datetime(date_labels = "%a")+xlab(label = "datetime")+ylab(label = "Global_reactive_power")
 # above plot is the bottom right corner
+
+# using the base plotting system.
 
 # make a grid below
 png(filename ="E:\\johns hopkins\\Exploring Data GitHub\\plot4.png",width = 480,height = 480,units = "px")
-plot_grid(plotltc,plotlbc,plotrbc,plotrtc,align = "h",axis = "b",nrow = 2,ncol = 2,rel_widths = c(1,1),rel_heights = c(1,1))
+par(mfrow=c(2,2), mar=c(5,5,2,2))
+plot(file2$date_time,file2$Global_active_power,type = 'l',ylab = "Global Active Power",xlab = "")
+plot(file2$date_time,file2$Voltage,type = 'l',xlab = "datetime",ylab = "Voltage")
+
+
+plot(file2$date_time,file2$Sub_metering_1,type = 'l',col='black',xlab = "",ylab = "Energy sub metering")
+lines(file2$date_time,file2$Sub_metering_2,type = 'l',col="red")
+lines(file2$date_time,file2$Sub_metering_3,type = 'l',col="blue")
+axis(side = 2,at = seq(0,30,10),lwd = 1)
+legend("topright", legend=c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"),col=c("black", "red", "blue"), 
+       lty = 1, cex = 0.9)
+plot(file2$date_time,file2$Global_reactive_power,type = "l",ylab = "Global reactive power",xlab = "")
+
+
+#plot_grid(plotltc,plotlbc,plotrbc,plotrtc,align = "h",axis = "b",nrow = 2,ncol = 2,rel_widths = c(1,1),rel_heights = c(1,1))
 dev.off()
 # end of plot4
 
